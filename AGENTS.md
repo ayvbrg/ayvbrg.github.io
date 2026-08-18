@@ -1,4 +1,4 @@
-# yvbrg.log
+# ayvbrg.log
 
 Use this file as a map, not a manual. It is the table of contents for this
 repository's agent-facing knowledge. Repository files define current behavior;
@@ -17,12 +17,14 @@ A stale map is a broken map.
   before naming or changing domain concepts
 - [Architecture decisions](docs/adr/) — durable technical and product
   decisions; read relevant ADRs before changing established behavior
+- [v1 spec](docs/spec-v1.md) — the buildable specification for the site;
+  read before implementing or changing v1 behavior
 
 ## Agent skills
 
 ### Issue tracker
 
-Issues and specs are tracked in GitHub Issues for `ayvbrg/yvbrg.log`. See
+Issues and specs are tracked in GitHub Issues for `ayvbrg/ayvbrg.log`. See
 `docs/agents/issue-tracker.md`.
 
 ### Triage labels
