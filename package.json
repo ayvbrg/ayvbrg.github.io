@@ -1,0 +1,22 @@
+{
+  "name": "ayvbrg-log",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
+    "preview": "astro preview",
+    "test": "node tests/build.mjs && node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.6",
+    "astro": "^7.2.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@types/node": "^26.2.0",
+    "linkedom": "^0.18.13",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,22 @@
+---
+// Bare Log index. Ticket #14 shapes the real Entry row.
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const entries = (await getCollection('log', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+---
+
+<Base title="Log">
+  <h1>Log</h1>
+  <ul>
+    {
+      entries.map((entry) => (
+        <li>
+          <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>
