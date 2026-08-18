@@ -1,21 +1,30 @@
 # Hosting and domain options
 
-_Price and limit snapshot: 2026-08-18. GitHub Pages is intentionally excluded._
+_Comparison snapshot: 2026-08-18; `ayvbrg.dev`, `.dev` pricing, and the
+recommendation rechecked 2026-08-19. GitHub Pages is intentionally excluded._
 
 ## Recommendation
 
 Use **Cloudflare Pages Free** for hosting and **Porkbun** for the domain. Try
-`yvbrg.dev` first.
+`ayvbrg.dev` first.
 
 - Hosting is **$0/month**. Cloudflare includes 500 builds/month, 100 custom
   domains per project, and unlimited static requests and bandwidth. Its GitHub
   integration rebuilds on every push. [[Cloudflare limits](https://developers.cloudflare.com/pages/platform/limits/),
   [pricing](https://pages.cloudflare.com/),
   [GitHub integration](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/)]
-- `yvbrg.dev` is **$8.75 for the first year, then $12.87/year** at Porkbun at
-  the time of research. Hosting plus domain is therefore **$8.75 in year one
-  and $12.87/year thereafter**, before taxes and future registry price changes.
-  [[Porkbun `.dev` pricing](https://porkbun.com/tld/dev)]
+- `ayvbrg.dev` appears available: Google Registry's authoritative `.dev` RDAP
+  endpoint returned `404 Not Found` with `ayvbrg.dev not found` when checked.
+  This is a point-in-time indication, not a reservation; confirm the name is
+  non-premium and still available at checkout.
+  [[IANA RDAP bootstrap](https://data.iana.org/rdap/dns.json),
+  [Google Registry RDAP result](https://pubapi.registry.google/rdap/domain/ayvbrg.dev)]
+- Porkbun's live public pricing API lists `.dev` at **$8.75 for the first year,
+  then $12.87/year** at the time of research. Hosting plus domain is therefore
+  **$8.75 in year one and $12.87/year thereafter**, before taxes and future
+  registry price changes.
+  [[Porkbun pricing API](https://api.porkbun.com/api/json/v3/pricing/get),
+  [Porkbun `.dev` pricing](https://porkbun.com/tld/dev)]
 - Keep the generated site as ordinary HTML/CSS/JS and keep the domain separate
   from the host. Moving later then means deploying the same output elsewhere
   and changing DNS, rather than rewriting the site.
@@ -60,21 +69,21 @@ Current standard-name prices at Porkbun:
 
 | Candidate | Current registration price | Current renewal price | Fit |
 | --- | ---: | ---: | --- |
-| **`yvbrg.dev`** | $8.75 first-year sale | $12.87/year | Best match for a developer log; `.dev` requires HTTPS, which every shortlisted host supplies. [[price](https://porkbun.com/tld/dev)] |
-| `yvbrg.com` | $11.08 | $11.08/year | Most familiar and slightly cheaper recurring alternative if available. [[price](https://porkbun.com/tld/com)] |
-| `yvbrg.net` | $12.52 | $12.52/year | Recognizable neutral fallback, but less semantically apt than `.dev`. [[price](https://porkbun.com/tld/net)] |
-| `yvbrg.me` | $17.27 | $17.27/year | Clearly personal, but costs more. [[price](https://porkbun.com/tld/me)] |
-| `yvbrg.in` | $7.83 | $7.83/year | Cheapest relevant geographic option, with strict verifiable-contact requirements and no Porkbun WHOIS privacy. [[price and requirements](https://porkbun.com/tld/in), [privacy exclusions](https://porkbun.com/products/whois_privacy)] |
+| **`ayvbrg.dev`** | $8.75 first-year sale | $12.87/year | Best match for a developer log; it appeared unregistered when checked, and `.dev` requires HTTPS, which every shortlisted host supplies. [[availability](https://pubapi.registry.google/rdap/domain/ayvbrg.dev), [price](https://api.porkbun.com/api/json/v3/pricing/get)] |
+| `ayvbrg.com` | $11.08 | $11.08/year | Most familiar and slightly cheaper recurring alternative if available. [[price](https://porkbun.com/tld/com)] |
+| `ayvbrg.net` | $12.52 | $12.52/year | Recognizable neutral fallback, but less semantically apt than `.dev`. [[price](https://porkbun.com/tld/net)] |
+| `ayvbrg.me` | $17.27 | $17.27/year | Clearly personal, but costs more. [[price](https://porkbun.com/tld/me)] |
+| `ayvbrg.in` | $7.83 | $7.83/year | Cheapest relevant geographic option, with strict verifiable-contact requirements and no Porkbun WHOIS privacy. [[price and requirements](https://porkbun.com/tld/in), [privacy exclusions](https://porkbun.com/products/whois_privacy)] |
 
 Prices can change, promotions may end, and a short name can be registered
 between research and purchase. Confirm availability, non-premium status, taxes,
 and the renewal total at checkout. Prefer the best durable name over a one-year
-promotion: **buy `yvbrg.dev` if available; otherwise check `yvbrg.com`, then
-`yvbrg.net`**.
+promotion: **buy `ayvbrg.dev` if available; otherwise check `ayvbrg.com`, then
+`ayvbrg.net`**.
 
 ## Decision
 
-**Cloudflare Pages Free + Porkbun + `yvbrg.dev`**: $8.75 in year one and
+**Cloudflare Pages Free + Porkbun + `ayvbrg.dev`**: $8.75 in year one and
 $12.87/year after that at today's prices, with no hosting charge. Revisit the
 host only if the site becomes commercial/dynamic, needs provider-specific
 server functions, or exceeds Cloudflare's build/file limits.
