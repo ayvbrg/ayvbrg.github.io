@@ -20,6 +20,10 @@ A stale map is a broken map.
 
 ## Agent skills
 
+### Research
+
+- [Hosting and domain options](docs/research/hosting-domain.md)
+
 ### Issue tracker
 
 Issues and specs are tracked in GitHub Issues for `ayvbrg/yvbrg.log`. See
