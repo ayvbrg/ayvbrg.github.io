@@ -60,7 +60,7 @@ explicitly non-commercial on Hobby; Render is simple but bandwidth-limited.
 
 ## Domain options
 
-`yvbrg.log` cannot be registered because `.log` is not a delegated top-level
+`ayvbrg.log` cannot be registered because `.log` is not a delegated top-level
 domain: IANA's authoritative Root Zone Database has no `.log` entry (it moves
 from `.lol` to `.london`), while `.dev` is delegated.
 [[IANA Root Zone Database](https://www.iana.org/domains/root/db)]
