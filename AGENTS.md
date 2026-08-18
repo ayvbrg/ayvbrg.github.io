@@ -17,6 +17,8 @@ A stale map is a broken map.
   before naming or changing domain concepts
 - [Architecture decisions](docs/adr/) — durable technical and product
   decisions; read relevant ADRs before changing established behavior
+- [Stack validation research](docs/research/stack-validation.md) — provisional
+  comparison of Astro, Eleventy, Hugo, and static client-side search
 
 ## Agent skills
 
