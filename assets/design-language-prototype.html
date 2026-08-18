@@ -6,6 +6,8 @@
   Switch: bottom bar, rail nav, or ?page=. Theme cycles too (?theme=).
   Original, subtle insect-gothic craft only: crest, motes, arches, silk,
   tunnel threads, and sparse flourishes. No game art or copied assets.
+  Type system: Newsreader for editorial text, Geist for interface text,
+  and Geist Mono for metadata and code. Self-host these in production.
 -->
 <html lang="en" data-theme="hallownest" data-mode="dark" data-page="entry">
 <head>
@@ -41,7 +43,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;transition:background .35s,color .35s}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.6;font-synthesis:none;-webkit-font-smoothing:antialiased;transition:background .35s,color .35s}
 a{color:inherit;text-decoration:none}
 body::after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;box-shadow:inset 0 0 160px color-mix(in srgb,var(--ink) 4%,transparent)}
 .motes{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
@@ -79,7 +81,7 @@ body::after{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;box
 .mode-toggle:hover{color:var(--ink);transform:rotate(16deg)}
 .mode-toggle:active{transform:rotate(16deg) scale(.94)}
 .mode-toggle:focus-visible,.switch button:focus-visible{outline:2px solid var(--acc);outline-offset:3px}
-.who{font-family:var(--serif);font-size:16px;line-height:1.62;color:var(--dim);margin:22px 0 30px}
+.who{font-family:var(--serif);font-size:16px;font-weight:340;line-height:1.62;color:var(--dim);margin:22px 0 30px}
 nav.rn{display:flex;flex-direction:column;gap:2px}
 nav.rn a{font-size:14px;color:var(--dim);padding:5px 0;width:max-content;position:relative;cursor:pointer}
 nav.rn a::after{content:"";position:absolute;left:0;bottom:2px;height:1px;width:0;background:var(--acc);transition:width .3s}
@@ -112,7 +114,7 @@ nav.rn a.on{color:var(--ink)} nav.rn a.on::after{width:100%}
 [data-theme="abyss"] .flourish i{width:5px;height:8px;border-radius:55% 45% 58% 42%;transform:translate(-50%,-50%) rotate(28deg)}
 [data-theme="deepnest"] .flourish i{width:7px;height:7px;transform:translate(-50%,-50%) rotate(45deg)}
 [data-theme="silk-ash"] .flourish i{width:3px;height:13px;border-radius:3px}
-.eyebrow{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--faint);margin:4px 0 40px}
+.eyebrow{font-family:var(--serif);font-style:italic;font-size:16px;font-weight:340;color:var(--faint);margin:4px 0 40px}
 .chip{font-family:var(--mono);font-size:10px;letter-spacing:.09em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
 .chip.dev,.chip.exp,.chip.rnd{color:var(--acc);background:var(--tag-bg)}
 
@@ -127,7 +129,7 @@ nav.rn a.on{color:var(--ink)} nav.rn a.on::after{width:100%}
 [data-theme="deepnest"] .row::before{transform:rotate(45deg)}
 [data-theme="silk-ash"] .row::before{width:1px;height:8px;right:-12px;border-radius:2px}
 .row .d{font-family:var(--mono);font-size:12.5px;color:var(--faint)}
-.row .t{font-family:var(--serif);font-size:20px;position:relative;display:inline;line-height:1.25;transition:text-shadow .3s}
+.row .t{font-family:var(--serif);font-size:20px;font-weight:420;position:relative;display:inline;line-height:1.25;transition:text-shadow .3s}
 .row .t::after{content:"";position:absolute;left:0;bottom:-2px;height:1px;width:0;background:var(--acc);transition:width .38s cubic-bezier(.16,1,.3,1)}
 .row:hover .t{color:var(--ink);text-shadow:0 0 12px color-mix(in srgb,var(--acc) 16%,transparent)}
 .row:hover .t::after{width:100%}
@@ -140,12 +142,12 @@ nav.rn a.on{color:var(--ink)} nav.rn a.on::after{width:100%}
 .entry .meta{font-family:var(--mono);font-size:12px;color:var(--faint);letter-spacing:.04em;margin:34px 0 12px}
 .entry h1{font-family:var(--serif);font-weight:420;font-size:clamp(32px,4.6vw,46px);line-height:1.08;letter-spacing:-.015em}
 .entry .tags{display:flex;gap:8px;margin:16px 0 34px}
-.entry .lead{font-family:var(--serif);font-size:21px;line-height:1.6;color:var(--dim);margin-bottom:26px}
-.entry p{font-family:var(--serif);font-size:18px;line-height:1.8;margin-bottom:24px;color:var(--ink)}
+.entry .lead{font-family:var(--serif);font-size:21px;font-weight:340;line-height:1.6;color:var(--dim);margin-bottom:26px}
+.entry p{font-family:var(--serif);font-size:18px;font-weight:340;line-height:1.8;margin-bottom:24px;color:var(--ink)}
 .entry h2{font-family:var(--serif);font-size:27px;font-weight:420;line-height:1.2;letter-spacing:-.01em;margin:40px 0 14px}
 .entry h3{font-family:var(--sans);font-size:15px;font-weight:600;line-height:1.4;margin:30px 0 10px}
 .entry p code,.entry li code{font-family:var(--mono);font-size:.76em;color:var(--acc);background:var(--tag-bg);border:1px solid var(--line);border-radius:4px;padding:2px 5px}
-.entry ul{font-family:var(--serif);font-size:18px;line-height:1.75;margin:-4px 0 26px 1.25em;padding:0}
+.entry ul{font-family:var(--serif);font-size:18px;font-weight:340;line-height:1.75;margin:-4px 0 26px 1.25em;padding:0}
 .entry li{padding-left:6px;margin-bottom:5px}
 .entry li::marker{color:var(--acc)}
 .code-block{max-width:100%;min-width:0;background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--acc);border-radius:8px;overflow:hidden;margin:4px 0 28px}
@@ -161,7 +163,7 @@ nav.rn a.on{color:var(--ink)} nav.rn a.on::after{width:100%}
 .callout p{color:var(--dim);margin:0;font-size:16.5px;line-height:1.65}
 .entry blockquote{position:relative;margin:36px 0;padding:3px 0 3px 28px;color:var(--dim)}
 .entry blockquote::before{content:"“";position:absolute;left:0;top:-8px;font-family:var(--serif);font-size:42px;line-height:1;color:var(--acc)}
-.entry blockquote p{font-size:21px;font-style:italic;line-height:1.55;color:var(--dim);margin:0}
+.entry blockquote p{font-size:21px;font-style:italic;font-weight:340;line-height:1.55;color:var(--dim);margin:0}
 .entry-disclosure{margin:30px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .entry-disclosure summary{list-style:none;display:flex;align-items:baseline;justify-content:space-between;gap:20px;padding:15px 0;cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--ink)}
 .entry-disclosure summary::-webkit-details-marker{display:none}
@@ -173,9 +175,9 @@ nav.rn a.on{color:var(--ink)} nav.rn a.on::after{width:100%}
 
 /* ---- FAQ ---- */
 .faq{max-width:680px}
-.faq .intro{font-family:var(--serif);font-size:18px;color:var(--dim);margin-bottom:30px;line-height:1.6}
+.faq .intro{font-family:var(--serif);font-size:18px;font-weight:340;color:var(--dim);margin-bottom:30px;line-height:1.6}
 details.qa{border-bottom:1px solid var(--line)}
-details.qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;font-family:var(--serif);font-size:21px;color:var(--ink)}
+details.qa summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:baseline;gap:20px;padding:20px 0;font-family:var(--serif);font-size:21px;font-weight:420;color:var(--ink)}
 details.qa summary::-webkit-details-marker{display:none}
 details.qa summary .ic{font-family:var(--mono);font-size:17px;color:var(--acc);flex-shrink:0;transition:transform .2s}
 details.qa[open] summary .ic{transform:rotate(45deg)}
@@ -190,7 +192,7 @@ details.qa .a a{color:var(--acc)} details.qa .a code{font-family:var(--mono);fon
 .tgroup{margin-bottom:40px}
 .tgroup h3{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
 .tgroup a{display:flex;justify-content:space-between;gap:20px;align-items:baseline;padding:14px 0;border-bottom:1px solid var(--line-soft);cursor:pointer}
-.tgroup a .t{font-family:var(--serif);font-size:18px}
+.tgroup a .t{font-family:var(--serif);font-size:18px;font-weight:420}
 .tgroup a:hover .t{color:var(--acc)}
 .tgroup a .d{font-family:var(--mono);font-size:12px;color:var(--faint)}
 
