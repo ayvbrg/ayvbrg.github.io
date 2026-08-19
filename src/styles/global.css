@@ -36,19 +36,10 @@ html[data-theme="light"] {
   color-scheme: light;
 }
 
-/* Prevent wrong-theme flash even before the inline script runs. */
-@media (prefers-color-scheme: light) {
-  :root {
-    --background: #edf0f1;
-    --surface: #f7f8f7;
-    --elevated: #e3e7e8;
-    --ink: #20272b;
-    --dim: #59666c;
-    --faint: #606d73;
-    --accent: #954746;
-    color-scheme: light;
-  }
-}
+/* Theme is controlled by BaseLayout's inline bootstrap:
+   - read persisted manual override from localStorage
+   - otherwise follow OS preference
+   So we don't also force light-mode here via prefers-color-scheme. */
 
 *,
 *::before,
