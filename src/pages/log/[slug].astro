@@ -2,6 +2,7 @@
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import { publicEntries } from "../../lib/log";
+import "../../styles/content.css";
 
 export async function getStaticPaths() {
   const entries = await publicEntries();
@@ -44,6 +45,26 @@ const updatedDate = entry.data.updated
   <div class="entry-body">
     <Content />
   </div>
+
+  <script is:inline>
+    document.querySelectorAll(".entry-body pre").forEach((pre) => {
+      const btn = document.createElement("button");
+      btn.className = "copy-btn";
+      btn.textContent = "Copy";
+      btn.setAttribute("aria-label", "Copy code to clipboard");
+      btn.addEventListener("click", () => {
+        const code = pre.querySelector("code");
+        if (code) {
+          navigator.clipboard.writeText(code.textContent || "").then(() => {
+            btn.textContent = "Copied";
+            setTimeout(() => { btn.textContent = "Copy"; }, 1500);
+          });
+        }
+      });
+      pre.style.position = "relative";
+      pre.appendChild(btn);
+    });
+  </script>
 
   <footer class="entry-close">
     <p>
