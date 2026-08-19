@@ -1,8 +1,50 @@
 ---
+import { publicEntries } from "../lib/log";
 import BaseLayout from "../layouts/BaseLayout.astro";
+
+const entries = await publicEntries();
+const recent = entries.slice(0, 3);
 ---
 
 <BaseLayout title="ayvbrg.log">
-  <h1>Landing placeholder</h1>
-  <p><a href="/log/">Go to Log</a></p>
+  <section class="identity">
+    <h1>Ayushman Buragohain</h1>
+    <p class="role"><!-- placeholder: current role --></p>
+    <p class="premise"><!-- placeholder: one sentence describing the Log --></p>
+  </section>
+
+  <section class="selected-work">
+    <h2>Selected work</h2>
+    <ul>
+      <li><!-- placeholder: work row 1 --></li>
+      <li><!-- placeholder: work row 2 --></li>
+      <li><!-- placeholder: work row 3 --></li>
+    </ul>
+  </section>
+
+  <section class="recent-entries">
+    <h2>Recent Entries</h2>
+    <ul>
+      {
+        recent.map((entry) => (
+          <li>
+            <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
+            <time>{entry.data.pubDate.toISOString().slice(0, 10)}</time>
+            <p class="summary">{entry.data.summary}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p><a href="/log/">See the complete Log</a></p>
+  </section>
+
+  <section class="elsewhere">
+    <h2>Elsewhere</h2>
+    <ul>
+      <li><a href="https://github.com/ayvbrg">GitHub</a></li>
+      <li><a href="https://www.linkedin.com/in/ayushman-buragohain">LinkedIn</a></li>
+      <li><a href="mailto:aburagohain160@gmail.com">Email</a></li>
+      <li><a href="/rss.xml">RSS</a></li>
+    </ul>
+  </section>
 </BaseLayout>
