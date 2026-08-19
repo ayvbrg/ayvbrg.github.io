@@ -1,7 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
+import { publicEntries, formatUtcDate, utcDateKey, chipClass, readingTime } from "../../lib/log";
 import "../../styles/content.css";
 
 export async function getStaticPaths() {
@@ -25,13 +25,18 @@ const updatedDate = entry.data.updated
   <article class="entry">
     <a class="back" href="/log/">← Back to Log</a>
     <h1>{entry.data.title}</h1>
-    <p class="meta" data-pub-date={pubDate}>{formatUtcDate(entry.data.pubDate)}</p>
-
-    {updatedDate ? (
-      <p class="meta" data-updated-date={updatedDate}>
-        Updated: {formatUtcDate(entry.data.updated!)}
-      </p>
-    ) : null}
+    <p class="meta">
+      <span data-pub-date={pubDate}>{formatUtcDate(entry.data.pubDate)}</span>
+      <span class="s" aria-hidden="true"></span>
+      <span>{readingTime(entry)}</span>
+      <span class="s" aria-hidden="true"></span>
+      <span>Ayushman Buragohain</span>
+      {updatedDate ? (
+        <span class="up" data-updated-date={updatedDate}>
+          Updated {formatUtcDate(entry.data.updated!)}
+        </span>
+      ) : null}
+    </p>
 
     <div class="tags" data-tags>
       {entry.data.tags.map((tag: string) => (

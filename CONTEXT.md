@@ -20,7 +20,7 @@ A label classifying an entry. The starting set is `devlog`, `experiment`,
 _Avoid_: Category
 
 **Landing**:
-The site's front page — introduces Ayushman and links to socials and work.
+The site's front page — introduces Ayushman, links to socials, recent entries, and the shelf.
 _Avoid_: Home, portfolio
 
 **FAQ**:

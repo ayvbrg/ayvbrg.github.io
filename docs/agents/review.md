@@ -1,8 +1,7 @@
 # Review
 
-Adversarial review of a candidate against its GitHub issue and
-[docs/spec-v1.md](../spec-v1.md). Domain words are Log, Entry, Tag, Landing,
-and FAQ as defined in `CONTEXT.md`.
+Adversarial review of a candidate against its GitHub issue. Domain words are
+Log, Entry, Tag, Landing, and FAQ as defined in `CONTEXT.md`.
 
 ## Stance
 
@@ -51,8 +50,7 @@ Check these against emitted output on every review:
   scrolling, reveals, and decorative transitions.
 - **390 px.** No document-level horizontal overflow at 390 px. Long code
   scrolls inside its block.
-- **Placeholders.** Landing copy and selected-work rows stay marked
-  placeholders. Fixture Entries used for tests do not ship as real content.
+- **Placeholders.** Fixture Entries used for tests do not ship as real content.
 
 ## Ticket review
 

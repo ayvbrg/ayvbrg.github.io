@@ -93,6 +93,8 @@ test("reduced-motion rules are present in emitted CSS", async () => {
   await waitForDistReady();
   const { cssContent } = readBuildArtifacts();
   assert.match(cssContent, /prefers-reduced-motion:\s*reduce/i);
+  assert.match(cssContent, /@keyframes descend/);
+  assert.match(cssContent, /descend scroll\(root\)/);
 });
 
 test("favicon is linked from emitted HTML", async () => {

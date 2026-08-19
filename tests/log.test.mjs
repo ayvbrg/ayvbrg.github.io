@@ -64,14 +64,24 @@ test("Log routes: index order, entry shape, exclusions (UTC)", () => {
     );
   }
 
-  // Row shape (title/date/summary/tags). We validate by presence of key snippets.
+  // Row shape: date, reading time, title, summary. Tags live on the entry
+  // and /tags/<tag>, not in listing rows.
   assert.match(indexHtml, /data-pub-date="2026-08-18"/);
   assert.match(indexHtml, /Fixture summary for yesterday devlog rows\./);
+  assert.match(indexHtml, /min read/);
 
-  // Linked Tags: href must be `/tags/<tag>/`.
-  assert.match(indexHtml, /href="\/tags\/devlog\//);
-  assert.match(indexHtml, /href="\/tags\/experiment\//);
-  assert.match(indexHtml, /href="\/tags\/random\//);
+  const entryListStart = indexHtml.indexOf('id="entry-list"');
+  const noscriptStart = indexHtml.indexOf("<noscript>");
+  assert.notEqual(entryListStart, -1);
+  assert.notEqual(noscriptStart, -1);
+  const listingRows = indexHtml.slice(entryListStart, noscriptStart);
+  assert.equal(listingRows.includes("/tags/"), false);
+
+  // Noscript fallback still points at Tag pages.
+  const noscript = indexHtml.slice(noscriptStart);
+  assert.match(noscript, /href="\/tags\/devlog\//);
+  assert.match(noscript, /href="\/tags\/experiment\//);
+  assert.match(noscript, /href="\/tags\/random\//);
 
   // Draft and future Entries are excluded from /log and routes.
   assert.equal(
@@ -106,6 +116,9 @@ test("Log routes: index order, entry shape, exclusions (UTC)", () => {
   const updatedIdx = entryHtml.indexOf(`data-updated-date="${updatedDate}"`);
   assert.notEqual(updatedIdx, -1);
   assert.ok(updatedIdx > pubDateIdx);
+  assert.match(entryHtml, /min read/);
+  assert.equal(entryHtml.includes("Updated:"), false);
+  assert.match(entryHtml, /Updated 17 Aug 2026/);
 
   // Tags come after metadata.
   const tagsIdx = entryHtml.indexOf(`href="/tags/experiment/"`);
