@@ -20,6 +20,15 @@ A stale map is a broken map.
 - [v1 spec](docs/spec-v1.md) — the buildable specification for the site;
   read before implementing or changing v1 behavior
 
+## Working agreements
+
+- [Worktree isolation](docs/agents/worktrees.md) — run repository tasks in
+  an isolated worktree under `../.workspaces/<slug>/`
+- [GitHub conventions](docs/agents/github.md) — comment attribution, PR
+  titles, and PR descriptions
+- [Review](docs/agents/review.md) — adversarial review against emitted
+  production-build output and the site invariants
+
 ## Agent skills
 
 ### Issue tracker
