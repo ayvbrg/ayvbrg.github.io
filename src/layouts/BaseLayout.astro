@@ -7,7 +7,8 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const site = Astro.site ? Astro.site.toString() : null;
+const canonicalURL = site ? new URL(Astro.url.pathname, site) : null;
 const desc = description || "Ayushman Buragohain's log of dev work, experiments, side quests, and occasional thoughts.";
 ---
 
@@ -18,10 +19,10 @@ const desc = description || "Ayushman Buragohain's log of dev work, experiments,
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={desc} />
-    <link rel="canonical" href={canonicalURL.href} />
+    {canonicalURL ? <link rel="canonical" href={canonicalURL.href} /> : null}
     <meta property="og:title" content={title} />
     <meta property="og:description" content={desc} />
-    <meta property="og:url" content={canonicalURL.href} />
+    {canonicalURL ? <meta property="og:url" content={canonicalURL.href} /> : null}
     <meta property="og:type" content="website" />
     <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content={title} />
