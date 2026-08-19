@@ -1,0 +1,213 @@
+/* ayvbrg.log global layer: Hallownest tokens, reset, typography.
+   Chrome (nav, motifs, motes) lives in scoped styles in Base.astro. */
+
+:root {
+  /* Native stacks only. No external font is ever requested. */
+  --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --mono: 'SFMono-Regular', Consolas, 'Liberation Mono', Courier, monospace;
+
+  /* Light palette. */
+  --bg: #edf0f1;
+  --surface: #f7f8f7;
+  --elevated: #e3e7e8;
+  --ink: #20272b;
+  --dim: #59666c;
+  --faint: #606d73;
+  --acc: #954746;
+
+  /* Derived, so it follows whichever palette is active. */
+  --line: color-mix(in srgb, var(--ink) 11%, transparent);
+
+  color-scheme: light dark;
+}
+
+/* Dark palette: the OS preference by default, the manual override always. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-mode='light']) {
+    --bg: #0e1419;
+    --surface: #151c22;
+    --elevated: #1c252c;
+    --ink: #e3e7e7;
+    --dim: #9aa4a8;
+    --faint: #829096;
+    --acc: #c46b68;
+  }
+}
+
+:root[data-mode='dark'] {
+  --bg: #0e1419;
+  --surface: #151c22;
+  --elevated: #1c252c;
+  --ink: #e3e7e7;
+  --dim: #9aa4a8;
+  --faint: #829096;
+  --acc: #c46b68;
+  color-scheme: dark;
+}
+
+:root[data-mode='light'] {
+  color-scheme: light;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.6;
+  font-synthesis: none;
+  overflow-wrap: break-word;
+  -webkit-font-smoothing: antialiased;
+  /* 350 ms theme change. */
+  transition: background 0.35s, color 0.35s;
+}
+
+:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 3px;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+
+h1 {
+  font-size: clamp(2rem, 6vw, 2.75rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin: 2.5rem 0 0.875rem;
+}
+
+h3 {
+  font-size: 1rem;
+  margin: 1.875rem 0 0.625rem;
+}
+
+p,
+ul,
+ol {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+
+p {
+  margin-bottom: 1.5rem;
+}
+
+ul,
+ol {
+  margin: 0 0 1.625rem 1.25em;
+  padding: 0;
+}
+
+li {
+  padding-left: 0.375rem;
+  margin-bottom: 0.3rem;
+}
+
+li::marker {
+  color: var(--acc);
+}
+
+a {
+  color: inherit;
+}
+
+main a {
+  color: var(--acc);
+  text-underline-offset: 0.18em;
+}
+
+blockquote {
+  margin: 2.25rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--acc);
+  color: var(--dim);
+  font-style: italic;
+}
+
+code,
+pre {
+  font-family: var(--mono);
+}
+
+:not(pre) > code {
+  font-size: 0.8em;
+  color: var(--acc);
+  background: color-mix(in srgb, var(--acc) 8%, transparent);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 2px 5px;
+}
+
+/* Wide surfaces scroll inside their own block; they never widen the page. */
+table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid var(--line);
+  text-align: left;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+  margin: 0 0 1.75rem;
+  padding: 1rem 1.125rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-left: 2px solid var(--acc);
+  border-radius: 8px;
+  font-size: 0.8125rem;
+  line-height: 1.72;
+  tab-size: 2;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Neutralises the reveal and every decorative transition. Reveals use
+     animation fill, so a cancelled animation leaves content visible. */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
