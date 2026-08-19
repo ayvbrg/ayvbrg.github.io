@@ -1,9 +1,20 @@
 ---
-import { publicEntries, formatUtcDate, chipClass } from "../lib/log";
+import { publicEntries, formatUtcDate, readingTime } from "../lib/log";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const entries = await publicEntries();
 const recent = entries.slice(0, 3);
+
+const reading = [
+  { title: "Designing Data-Intensive Applications", author: "Martin Kleppmann", status: "p.184" },
+  { title: "The Left Hand of Darkness", author: "Ursula K. Le Guin", status: "halfway" },
+  { title: "Thinking in Systems", author: "Donella Meadows", status: "re-read" },
+];
+const watching = [
+  { title: "Transformers, visually", author: "3Blue1Brown", status: "series" },
+  { title: "Rendering rabbit holes", author: "Acerola", status: "weekly" },
+  { title: "Hollow Knight score breakdown", author: "Christopher Larkin", status: "on loop" },
+];
 ---
 
 <BaseLayout title="ayvbrg.log">
@@ -12,47 +23,77 @@ const recent = entries.slice(0, 3);
       <h1>Ayushman Buragohain</h1>
       <span class="flourish" aria-hidden="true"><i></i></span>
     </div>
-    <p class="role placeholder"><!-- placeholder: current role --></p>
-    <p class="premise eyebrow"><!-- placeholder: one sentence describing the Log --></p>
-  </section>
-
-  <section class="selected-work landing-section">
-    <h2>Selected work</h2>
-    <div class="th"><span>Date</span><span>Work</span><span class="r">Link</span></div>
-    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 1 --></span><span class="tg">—</span></div>
-    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 2 --></span><span class="tg">—</span></div>
-    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 3 --></span><span class="tg">—</span></div>
+    <p class="role">I build AI tooling for comics at Dashtoon.</p>
+    <p class="premise">Dev logs, experiments, books, and the occasional thought.</p>
+    <nav class="icons" aria-label="Elsewhere">
+      <a class="ico" href="https://github.com/ayvbrg" aria-label="GitHub" title="GitHub">
+        <svg><use href="#i-github" /></svg>
+      </a>
+      <a class="ico" href="https://x.com/__hsuya" aria-label="X" title="X">
+        <svg><use href="#i-x" /></svg>
+      </a>
+      <a class="ico" href="https://www.kaggle.com/benihime91" aria-label="Kaggle" title="Kaggle">
+        <svg><use href="#i-kaggle" /></svg>
+      </a>
+      <a class="ico" href="mailto:aburagohain160@gmail.com" aria-label="Email" title="Email">
+        <svg><use href="#i-mail" /></svg>
+      </a>
+      <span class="sep" aria-hidden="true"></span>
+      <a class="ico" href="/rss.xml" aria-label="RSS feed" title="RSS">
+        <svg><use href="#i-rss" /></svg>
+      </a>
+    </nav>
   </section>
 
   <section class="recent-entries landing-section">
-    <h2>Recent Entries</h2>
-    <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+    <h2 class="sec-h"><svg class="glyph" aria-hidden="true"><use href="#g-quill" /></svg>Recent entries</h2>
+    <div class="th"><span>Date</span><span>Entry</span></div>
     {
       recent.map((entry) => (
-        <div class="row">
-          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+        <a class="row" href={`/log/${entry.id}/`}>
+          <span class="d">
+            {formatUtcDate(entry.data.pubDate)}
+            <span class="rt">{readingTime(entry)}</span>
+          </span>
           <span>
-            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="t">{entry.data.title}</span>
             <span class="summary">{entry.data.summary}</span>
           </span>
-          <span class="tg">
-            {entry.data.tags.map((t: string) => (
-              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
-            ))}
-          </span>
-        </div>
+        </a>
       ))
     }
-    <p class="eyebrow"><a href="/log/">See the complete Log</a></p>
+    <p class="eyebrow"><a href="/log/">See the complete Log →</a></p>
   </section>
 
-  <section class="elsewhere landing-section">
-    <h2>Elsewhere</h2>
-    <nav class="else">
-      <a href="https://github.com/ayvbrg">GitHub</a>
-      <a href="https://www.linkedin.com/in/ayushman-buragohain">LinkedIn</a>
-      <a href="mailto:aburagohain160@gmail.com">Email</a>
-      <a href="/rss.xml">RSS</a>
-    </nav>
+  <section class="landing-section" id="shelf">
+    <h2 class="sec-h"><svg class="glyph" aria-hidden="true"><use href="#g-diamond" /></svg>On the shelf</h2>
+    <div class="shelf">
+      <div>
+        <h3><svg class="glyph" aria-hidden="true"><use href="#g-tome" /></svg>Reading</h3>
+        <ul>
+          {
+            reading.map((item) => (
+              <li>
+                <span class="n">{item.title}</span>
+                <span class="by">{item.author} · <span class="at">{item.status}</span></span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div>
+        <h3><svg class="glyph" aria-hidden="true"><use href="#g-lantern" /></svg>Watching</h3>
+        <ul>
+          {
+            watching.map((item) => (
+              <li>
+                <span class="n">{item.title}</span>
+                <span class="by">{item.author} · <span class="at">{item.status}</span></span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
   </section>
 </BaseLayout>

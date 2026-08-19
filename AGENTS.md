@@ -17,8 +17,6 @@ A stale map is a broken map.
   before naming or changing domain concepts
 - [Architecture decisions](docs/adr/) — durable technical and product
   decisions; read relevant ADRs before changing established behavior
-- [v1 spec](docs/spec-v1.md) — the buildable specification for the site;
-  read before implementing or changing v1 behavior
 
 ## Working agreements
 

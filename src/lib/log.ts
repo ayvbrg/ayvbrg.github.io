@@ -56,6 +56,14 @@ export function chipClass(tag: string): string {
   return "chip rnd";
 }
 
+const WORDS_PER_MINUTE = 220;
+
+export function readingTime(entry: { body?: string }): string {
+  const words = (entry.body ?? "").trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+  return `${minutes} min read`;
+}
+
 const TAG_ORDER = ["devlog", "experiment", "random"];
 
 export function tagGroups(entries: Awaited<ReturnType<typeof publicEntries>>) {

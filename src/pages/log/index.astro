@@ -1,5 +1,5 @@
 ---
-import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
+import { publicEntries, formatUtcDate, utcDateKey, readingTime } from "../../lib/log";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const entries = await publicEntries();
@@ -23,26 +23,25 @@ const entries = await publicEntries();
     <div id="search-results" class="search-results" aria-live="polite"></div>
   </div>
 
-  <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+  <div class="th"><span>Date</span><span>Entry</span></div>
   <div id="entry-list">
     {
       entries.map((entry) => (
-        <div
+        <a
           class="row"
+          href={`/log/${entry.id}/`}
           data-entry-id={entry.id}
           data-pub-date={utcDateKey(entry.data.pubDate)}
         >
-          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          <span class="d">
+            {formatUtcDate(entry.data.pubDate)}
+            <span class="rt">{readingTime(entry)}</span>
+          </span>
           <span>
-            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="t">{entry.data.title}</span>
             <span class="summary">{entry.data.summary}</span>
           </span>
-          <span class="tg">
-            {entry.data.tags.map((t: string) => (
-              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
-            ))}
-          </span>
-        </div>
+        </a>
       ))
     }
   </div>
