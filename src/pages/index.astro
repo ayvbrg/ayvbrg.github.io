@@ -1,5 +1,5 @@
 ---
-import { publicEntries } from "../lib/log";
+import { publicEntries, formatUtcDate, chipClass } from "../lib/log";
 import BaseLayout from "../layouts/BaseLayout.astro";
 
 const entries = await publicEntries();
@@ -8,43 +8,51 @@ const recent = entries.slice(0, 3);
 
 <BaseLayout title="ayvbrg.log">
   <section class="identity">
-    <h1>Ayushman Buragohain</h1>
-    <p class="role"><!-- placeholder: current role --></p>
-    <p class="premise"><!-- placeholder: one sentence describing the Log --></p>
+    <div class="head-h">
+      <h1>Ayushman Buragohain</h1>
+      <span class="flourish" aria-hidden="true"><i></i></span>
+    </div>
+    <p class="role placeholder"><!-- placeholder: current role --></p>
+    <p class="premise eyebrow"><!-- placeholder: one sentence describing the Log --></p>
   </section>
 
-  <section class="selected-work">
+  <section class="selected-work landing-section">
     <h2>Selected work</h2>
-    <ul>
-      <li><!-- placeholder: work row 1 --></li>
-      <li><!-- placeholder: work row 2 --></li>
-      <li><!-- placeholder: work row 3 --></li>
-    </ul>
+    <div class="th"><span>Date</span><span>Work</span><span class="r">Link</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 1 --></span><span class="tg">—</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 2 --></span><span class="tg">—</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 3 --></span><span class="tg">—</span></div>
   </section>
 
-  <section class="recent-entries">
+  <section class="recent-entries landing-section">
     <h2>Recent Entries</h2>
-    <ul>
-      {
-        recent.map((entry) => (
-          <li>
-            <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
-            <time>{entry.data.pubDate.toISOString().slice(0, 10)}</time>
-            <p class="summary">{entry.data.summary}</p>
-          </li>
-        ))
-      }
-    </ul>
-    <p><a href="/log/">See the complete Log</a></p>
+    <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+    {
+      recent.map((entry) => (
+        <div class="row">
+          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          <span>
+            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="summary">{entry.data.summary}</span>
+          </span>
+          <span class="tg">
+            {entry.data.tags.map((t: string) => (
+              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
+            ))}
+          </span>
+        </div>
+      ))
+    }
+    <p class="eyebrow"><a href="/log/">See the complete Log</a></p>
   </section>
 
-  <section class="elsewhere">
+  <section class="elsewhere landing-section">
     <h2>Elsewhere</h2>
-    <ul>
-      <li><a href="https://github.com/ayvbrg">GitHub</a></li>
-      <li><a href="https://www.linkedin.com/in/ayushman-buragohain">LinkedIn</a></li>
-      <li><a href="mailto:aburagohain160@gmail.com">Email</a></li>
-      <li><a href="/rss.xml">RSS</a></li>
-    </ul>
+    <nav class="rn">
+      <a href="https://github.com/ayvbrg">GitHub</a>
+      <a href="https://www.linkedin.com/in/ayushman-buragohain">LinkedIn</a>
+      <a href="mailto:aburagohain160@gmail.com">Email</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
   </section>
 </BaseLayout>

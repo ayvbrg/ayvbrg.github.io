@@ -1,14 +1,18 @@
 ---
-import { publicEntries } from "../../lib/log";
+import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 const entries = await publicEntries();
 ---
 
 <BaseLayout title="Log — ayvbrg.log">
-  <h1>Log</h1>
+  <div class="head-h">
+    <h1>The log</h1>
+    <span class="flourish" aria-hidden="true"><i></i></span>
+  </div>
+  <p class="eyebrow">Everything, newest first.</p>
 
-  <div id="search">
+  <div class="search" id="search">
     <label for="search-input">Search</label>
     <input
       id="search-input"
@@ -16,28 +20,40 @@ const entries = await publicEntries();
       placeholder="Search entries…"
       autocomplete="off"
     />
-    <div id="search-results" aria-live="polite"></div>
+    <div id="search-results" class="search-results" aria-live="polite"></div>
   </div>
 
-  <ul id="entry-list">
+  <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+  <div id="entry-list">
     {
       entries.map((entry) => (
-        <li data-entry-id={entry.id} data-pub-date={entry.data.pubDate.toISOString().slice(0, 10)}>
-          <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
-          <time>{entry.data.pubDate.toISOString().slice(0, 10)}</time>
-          <p class="summary">{entry.data.summary}</p>
-          <ul class="tags">
+        <div
+          class="row"
+          data-entry-id={entry.id}
+          data-pub-date={utcDateKey(entry.data.pubDate)}
+        >
+          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          <span>
+            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="summary">{entry.data.summary}</span>
+          </span>
+          <span class="tg">
             {entry.data.tags.map((t: string) => (
-              <li><a href={`/tags/${t}/`}>{t}</a></li>
+              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
             ))}
-          </ul>
-        </li>
+          </span>
+        </div>
       ))
     }
-  </ul>
+  </div>
 
   <noscript>
-    <p>Search requires JavaScript. Browse the full list above or use <a href="/tags/devlog/">devlog</a>, <a href="/tags/experiment/">experiment</a>, or <a href="/tags/random/">random</a> Tag links.</p>
+    <p>
+      Search requires JavaScript. Browse the full list above or use{" "}
+      <a href="/tags/devlog/">devlog</a>,{" "}
+      <a href="/tags/experiment/">experiment</a>, or{" "}
+      <a href="/tags/random/">random</a> Tag links.
+    </p>
   </noscript>
 
   <script is:inline>
@@ -47,8 +63,12 @@ const entries = await publicEntries();
       const entryList = document.getElementById("entry-list");
       if (!input) return;
 
-      const pagefind = await import("/pagefind/pagefind.js");
-      await pagefind.init();
+      try {
+        const pagefind = await import("/pagefind/pagefind.js");
+        await pagefind.init();
+      } catch {
+        return;
+      }
 
       input.addEventListener("input", async () => {
         const query = input.value.trim();
@@ -63,10 +83,18 @@ const entries = await publicEntries();
           resultsDiv.innerHTML = `<p>No results for "${query}". Try <a href="/tags/devlog/">devlog</a>, <a href="/tags/experiment/">experiment</a>, or <a href="/tags/random/">random</a>.</p>`;
           return;
         }
-        const items = await Promise.all(search.results.slice(0, 20).map((r: any) => r.data()));
-        resultsDiv.innerHTML = "<ul>" + items.map((item: any) =>
-          `<li><a href="${item.url}">${item.meta?.title ?? item.url}</a><p>${item.excerpt}</p></li>`
-        ).join("") + "</ul>";
+        const items = await Promise.all(
+          search.results.slice(0, 20).map((r) => r.data()),
+        );
+        resultsDiv.innerHTML =
+          "<div>" +
+          items
+            .map(
+              (item) =>
+                `<a class="row" href="${item.url}"><span class="t">${item.meta?.title ?? item.url}</span></a>`,
+            )
+            .join("") +
+          "</div>";
       });
     }
     initSearch();

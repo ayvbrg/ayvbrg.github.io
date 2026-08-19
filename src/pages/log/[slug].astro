@@ -1,7 +1,7 @@
 ---
 import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
-import { publicEntries } from "../../lib/log";
+import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
 import "../../styles/content.css";
 
 export async function getStaticPaths() {
@@ -15,68 +15,63 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content } = await render(entry);
 
-const pubDate = entry.data.pubDate.toISOString().slice(0, 10);
+const pubDate = utcDateKey(entry.data.pubDate);
 const updatedDate = entry.data.updated
-  ? entry.data.updated.toISOString().slice(0, 10)
+  ? utcDateKey(entry.data.updated)
   : null;
 ---
 
 <BaseLayout title={entry.data.title} description={entry.data.summary}>
-  <div class="entry-back">
-    <a href="/log/">Back to Log</a>
-  </div>
-  <h1>{entry.data.title}</h1>
-  <p class="pub-date" data-pub-date={pubDate}>{pubDate}</p>
+  <article class="entry">
+    <div class="entry-back">
+      <a class="back" href="/log/">← Back to Log</a>
+    </div>
+    <h1>{entry.data.title}</h1>
+    <p class="pub-date" data-pub-date={pubDate}>{formatUtcDate(entry.data.pubDate)}</p>
 
-  {updatedDate ? (
-    <p class="updated-date" data-updated-date={updatedDate}>
-      Updated: {updatedDate}
-    </p>
-  ) : null}
+    {updatedDate ? (
+      <p class="updated-date" data-updated-date={updatedDate}>
+        Updated: {formatUtcDate(entry.data.updated!)}
+      </p>
+    ) : null}
 
-  <ul class="tags" data-tags>
-    {entry.data.tags.map((tag: string) => (
-      <li>
-        <a href={`/tags/${tag}/`}>{tag}</a>
-      </li>
-    ))}
-  </ul>
+    <ul class="tags" data-tags>
+      {entry.data.tags.map((tag: string) => (
+        <li>
+          <a href={`/tags/${tag}/`} class={chipClass(tag)}>{tag}</a>
+        </li>
+      ))}
+    </ul>
 
-  <div class="entry-body">
-    <Content />
-  </div>
+    <div class="entry-body">
+      <Content />
+    </div>
 
-  <script is:inline>
-    document.querySelectorAll(".entry-body pre").forEach((pre) => {
-      const btn = document.createElement("button");
-      btn.className = "copy-btn";
-      btn.textContent = "Copy";
-      btn.setAttribute("aria-label", "Copy code to clipboard");
-      btn.addEventListener("click", () => {
-        const code = pre.querySelector("code");
-        if (code) {
-          navigator.clipboard.writeText(code.textContent || "").then(() => {
-            btn.textContent = "Copied";
-            setTimeout(() => { btn.textContent = "Copy"; }, 1500);
-          });
-        }
+    <script is:inline>
+      document.querySelectorAll(".entry-body pre").forEach((pre) => {
+        const btn = document.createElement("button");
+        btn.className = "copy-btn";
+        btn.textContent = "copy";
+        btn.setAttribute("aria-label", "Copy code to clipboard");
+        btn.addEventListener("click", () => {
+          const code = pre.querySelector("code");
+          if (code) {
+            navigator.clipboard.writeText(code.textContent || "").then(() => {
+              btn.textContent = "copied";
+              setTimeout(() => {
+                btn.textContent = "copy";
+              }, 1500);
+            });
+          }
+        });
+        pre.appendChild(btn);
       });
-      pre.style.position = "relative";
-      pre.appendChild(btn);
-    });
-  </script>
+    </script>
 
-  <footer class="entry-close">
-    <p>
-      <a href="mailto:aburagohain160@gmail.com"
-        >aburagohain160@gmail.com</a
-      >
-    </p>
-    <p>
+    <footer class="entry-close">
+      <a href="mailto:aburagohain160@gmail.com">aburagohain160@gmail.com</a>
       <a href="/rss.xml">RSS</a>
-    </p>
-    <p>
-      <a href="/log/">Back to Log</a>
-    </p>
-  </footer>
+      <a href="/log/">← Back to Log</a>
+    </footer>
+  </article>
 </BaseLayout>

@@ -9,7 +9,13 @@ interface Props {
 const { title, description } = Astro.props;
 const site = Astro.site ? Astro.site.toString() : null;
 const canonicalURL = site ? new URL(Astro.url.pathname, site) : null;
-const desc = description || "Ayushman Buragohain's log of dev work, experiments, side quests, and occasional thoughts.";
+const desc =
+  description ||
+  "Ayushman Buragohain's log of dev work, experiments, side quests, and occasional thoughts.";
+const path = Astro.url.pathname;
+const onLog = path === "/log/" || path.startsWith("/log/");
+const onFaq = path === "/faq/" || path === "/faq";
+const onTags = path.startsWith("/tags/");
 ---
 
 <!doctype html>
@@ -30,8 +36,6 @@ const desc = description || "Ayushman Buragohain's log of dev work, experiments,
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
     <script is:inline>
-      // Theme bootstrap: uses persisted manual override first, otherwise OS preference.
-      // Also kept intentionally minimal so ordinary pages ship only this inline JS.
       (() => {
         const STORAGE_KEY = "ayvbrg.log.theme";
         const root = document.documentElement;
@@ -39,11 +43,11 @@ const desc = description || "Ayushman Buragohain's log of dev work, experiments,
         let saved = null;
         try {
           saved = localStorage.getItem(STORAGE_KEY);
-        } catch {
-          // Ignore storage failures; fall back to OS preference.
-        }
+        } catch {}
 
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
         const theme =
           saved === "light" || saved === "dark"
             ? saved
@@ -64,33 +68,31 @@ const desc = description || "Ayushman Buragohain's log of dev work, experiments,
             "aria-label",
             isLight ? "Use dark theme" : "Use light theme",
           );
-          btn.textContent = isLight ? "Theme: Light" : "Theme: Dark";
+          btn.setAttribute(
+            "title",
+            isLight ? "Use dark theme" : "Use light theme",
+          );
+          const glyph = btn.querySelector("[data-theme-glyph]");
+          if (glyph) glyph.textContent = isLight ? "☾︎" : "☼︎";
         };
 
         const bindButton = () => {
           btn = document.getElementById("theme-toggle");
           if (!btn) return;
           syncButton();
-
-          // Prevent duplicate listeners in dev/hmr.
           if (btn.dataset.themeBound === "1") return;
           btn.dataset.themeBound = "1";
-
           btn.addEventListener("click", () => {
             const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
             try {
               localStorage.setItem(STORAGE_KEY, nextTheme);
-            } catch {
-              // Ignore storage failures.
-            }
+            } catch {}
             root.dataset.theme = nextTheme;
             root.style.colorScheme = nextTheme;
             syncButton();
           });
         };
 
-        // The inline script runs in <head>, so the button might not exist yet.
-        // We bind immediately when possible, otherwise we defer to DOMContentLoaded.
         bindButton();
         if (!btn) window.addEventListener("DOMContentLoaded", bindButton);
       })();
@@ -98,31 +100,61 @@ const desc = description || "Ayushman Buragohain's log of dev work, experiments,
   </head>
   <body>
     <div class="motes" aria-hidden="true">
-      <span class="mote" style="left: 12%; animation-duration: 19s; animation-delay: -2s" />
-      <span class="mote" style="left: 26%; animation-duration: 24s; animation-delay: -9s" />
-      <span class="mote" style="left: 41%; animation-duration: 21s; animation-delay: -14s" />
-      <span class="mote" style="left: 58%; animation-duration: 27s; animation-delay: -4s" />
-      <span class="mote" style="left: 73%; animation-duration: 18s; animation-delay: -11s" />
-      <span class="mote" style="left: 87%; animation-duration: 23s; animation-delay: -6s" />
+      <span class="mote" style="left: 12%; animation-duration: 19s; animation-delay: -2s"></span>
+      <span class="mote" style="left: 26%; animation-duration: 24s; animation-delay: -9s"></span>
+      <span class="mote" style="left: 41%; animation-duration: 21s; animation-delay: -14s"></span>
+      <span class="mote" style="left: 58%; animation-duration: 27s; animation-delay: -4s"></span>
+      <span class="mote" style="left: 73%; animation-duration: 18s; animation-delay: -11s"></span>
+      <span class="mote" style="left: 87%; animation-duration: 23s; animation-delay: -6s"></span>
     </div>
+    <div class="theme-el motif-hallownest" aria-hidden="true"></div>
 
-    <header>
-      <nav aria-label="Primary">
-        <a href="/">ayvbrg.log</a>
-        <a href="/log/">Log</a>
-        <a href="/faq/">FAQ</a>
-        <button
-          id="theme-toggle"
-          type="button"
-          aria-label="Theme"
-          aria-pressed="false"
-        >
-          Theme
-        </button>
-      </nav>
-    </header>
-    <main>
-      <slot />
-    </main>
+    <div class="shell">
+      <aside class="rail">
+        <div class="mark">
+          <a href="/" aria-label="ayvbrg.log">
+            <svg viewBox="0 0 28 28" aria-hidden="true">
+              <path d="M10 12 C8.5 8 8 6 7 3.5 C9 5 10.5 7 11.5 10"></path>
+              <path d="M18 12 C19.5 8 20 6 21 3.5 C19 5 17.5 7 16.5 10"></path>
+              <path d="M14 10.5 C9.5 10.5 8 14 8.5 18 C9 22 11.5 24.5 14 25 C16.5 24.5 19 22 19.5 18 C20 14 18.5 10.5 14 10.5 Z"></path>
+              <line x1="14" y1="11" x2="14" y2="20"></line>
+            </svg>
+          </a>
+          <a href="/" class="wm"><b>ayvbrg</b>.log</a>
+          <button
+            class="mode-toggle"
+            id="theme-toggle"
+            type="button"
+            aria-label="Theme"
+            aria-pressed="false"
+          >
+            <span data-theme-glyph aria-hidden="true">☼︎</span>
+          </button>
+        </div>
+        <p class="who">Ayushman Buragohain keeps a log of what gets built and what breaks.</p>
+        <nav class="rn" aria-label="Primary">
+          <a href="/log/" class={onLog && !onTags ? "on" : undefined}>the log</a>
+          <a href="/tags/devlog/" class={onTags ? "on" : undefined}>tags</a>
+          <a href="/faq/" class={onFaq ? "on" : undefined}>faq</a>
+          <a href="https://github.com/ayvbrg">github</a>
+          <a href="/rss.xml">rss</a>
+        </nav>
+        <div class="cur"><b>CURRENTLY</b>AI tooling for comics at Dashtoon</div>
+      </aside>
+
+      <main class="main">
+        <slot />
+        <div class="colophon">
+          <svg viewBox="0 0 130 16" aria-hidden="true">
+            <path d="M2 8 H46"></path>
+            <path d="M118 8 H84"></path>
+            <path d="M46 8 C54 1 60 15 65 8 C70 1 76 15 84 8"></path>
+            <path d="M65 2 V14"></path>
+            <path d="M60 4.5 L65 8 L70 4.5"></path>
+          </svg>
+          <span class="c">© 2026 Ayushman Buragohain · built in the open</span>
+        </div>
+      </main>
+    </div>
   </body>
 </html>

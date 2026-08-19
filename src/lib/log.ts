@@ -27,3 +27,32 @@ export async function publicEntries() {
   return publicOnes;
 }
 
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
+export function utcDateKey(date: Date): string {
+  return utcCalendarDateKey(date);
+}
+
+export function formatUtcDate(date: Date): string {
+  return `${date.getUTCDate()} ${MONTHS[date.getUTCMonth()]} ${date.getUTCFullYear()}`;
+}
+
+export function chipClass(tag: string): string {
+  if (tag === "devlog") return "chip dev";
+  if (tag === "experiment") return "chip exp";
+  return "chip rnd";
+}
+
