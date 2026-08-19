@@ -409,6 +409,8 @@ nav.rn a.on {
 }
 
 .chip {
+  display: inline-block;
+  width: max-content;
   font-family: var(--sans);
   font-size: 10px;
   letter-spacing: 0.09em;
@@ -954,6 +956,19 @@ details.qa .a code {
   margin-bottom: 40px;
 }
 
+.tgroup .tg {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+
+.tgroup .summary {
+  font-size: 14px;
+  color: var(--dim);
+  margin: 0 0 8px;
+}
+
 .tgroup h3 {
   display: flex;
   align-items: center;
@@ -966,7 +981,7 @@ details.qa .a code {
   margin-bottom: 6px;
 }
 
-.tgroup a {
+.tgroup a:not(.chip) {
   display: flex;
   justify-content: space-between;
   gap: 20px;
@@ -975,17 +990,17 @@ details.qa .a code {
   border-bottom: 1px solid var(--line-soft);
 }
 
-.tgroup a .t {
+.tgroup a:not(.chip) .t {
   font-family: var(--sans);
   font-size: 18px;
   font-weight: 500;
 }
 
-.tgroup a:hover .t {
+.tgroup a:not(.chip):hover .t {
   color: var(--acc);
 }
 
-.tgroup a .d {
+.tgroup a:not(.chip) .d {
   font-family: var(--sans);
   font-size: 12px;
   color: var(--faint);
