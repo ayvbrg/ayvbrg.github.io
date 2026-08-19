@@ -1,6 +1,6 @@
 ---
 title: Placeholder Entry
-date: 2026-08-19
+date: 2026-08-12
 summary: Placeholder text proving the Log renders an Entry end to end.
 tags: [devlog]
 ---

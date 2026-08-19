@@ -1,20 +1,67 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { publicEntries } from '../../lib/log';
 
 export async function getStaticPaths() {
-  const entries = await getCollection('log', ({ data }) => !data.draft);
+  const entries = await publicEntries();
   return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+const day = (date: Date) => date.toISOString().slice(0, 10);
 ---
 
 <Base title={entry.data.title}>
   <article>
+    <p><a href="/log/">Back to the Log</a></p>
     <h1>{entry.data.title}</h1>
-    <p><time datetime={entry.data.date.toISOString()}>{entry.data.date.toISOString().slice(0, 10)}</time></p>
+    <p class="meta">
+      <time datetime={day(entry.data.date)}>{day(entry.data.date)}</time>
+      {
+        entry.data.updated && (
+          <span>
+            Updated <time datetime={day(entry.data.updated)}>{day(entry.data.updated)}</time>
+          </span>
+        )
+      }
+    </p>
+    <ul class="tags" aria-label="Tags">
+      {
+        entry.data.tags.map((tag) => (
+          <li>
+            <a href={`/tags/${tag}/`}>{tag}</a>
+          </li>
+        ))
+      }
+    </ul>
     <Content />
+    <footer>
+      <a href="mailto:aburagohain160@gmail.com">Report an error in this Entry</a>
+      <a href="/rss.xml">RSS</a>
+      <a href="/log/">Back to the Log</a>
+    </footer>
   </article>
 </Base>
+
+<style>
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    list-style: none;
+    padding: 0;
+  }
+  footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 3rem;
+  }
+</style>

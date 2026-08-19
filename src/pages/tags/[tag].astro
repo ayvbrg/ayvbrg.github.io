@@ -1,0 +1,29 @@
+---
+// Minimal Tag route so the Tag links on the Log and Entry pages resolve.
+// Ticket #16 owns the real Tag view.
+import Base from '../../layouts/Base.astro';
+import { publicEntries } from '../../lib/log';
+
+export async function getStaticPaths() {
+  const entries = await publicEntries();
+  return [...new Set(entries.flatMap((entry) => entry.data.tags))].map((tag) => ({
+    params: { tag },
+    props: { tag, entries: entries.filter((entry) => entry.data.tags.includes(tag)) },
+  }));
+}
+
+const { tag, entries } = Astro.props;
+---
+
+<Base title={`Tag: ${tag}`}>
+  <h1>{tag}</h1>
+  <ul>
+    {
+      entries.map((entry) => (
+        <li>
+          <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Base>
