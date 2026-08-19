@@ -1,20 +1,16 @@
 ---
-import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
+import { publicEntries, formatUtcDate, utcDateKey, chipClass, tagGroups } from "../../lib/log";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
 export async function getStaticPaths() {
-  const entries = await publicEntries();
-  const tags = [...new Set(entries.flatMap((e) => e.data.tags))];
-  return tags.map((tag) => ({
-    params: { tag },
-    props: {
-      tag,
-      entries: entries.filter((e) => e.data.tags.includes(tag)),
-    },
+  const groups = tagGroups(await publicEntries());
+  return groups.map((group) => ({
+    params: { tag: group.tag },
+    props: { tag: group.tag, groups, entries: group.entries },
   }));
 }
 
-const { tag, entries } = Astro.props;
+const { tag, groups, entries } = Astro.props;
 ---
 
 <BaseLayout title={`${tag} — ayvbrg.log`}>
@@ -23,32 +19,32 @@ const { tag, entries } = Astro.props;
       <h1>Tags</h1>
       <span class="flourish" aria-hidden="true"><i></i></span>
     </div>
-    <p class="eyebrow">{tag}, newest first.</p>
-    <p><a href="/log/">← Back to Log</a></p>
+    <p class="eyebrow">Three ways in.</p>
     <div class="tagbar">
-      <a href="/tags/devlog/" class="chip dev">devlog</a>
-      <a href="/tags/experiment/" class="chip exp">experiment</a>
-      <a href="/tags/random/" class="chip rnd">random</a>
+      {
+        groups.map((group) => (
+          <a
+            href={`/tags/${group.tag}/`}
+            class={chipClass(group.tag)}
+            aria-current={group.tag === tag ? "page" : undefined}
+          >
+            {group.tag} <span class="n">{group.entries.length}</span>
+          </a>
+        ))
+      }
     </div>
     <div class="tgroup">
       <h3><span class={chipClass(tag)}>{tag}</span></h3>
       {
         entries.map((entry) => (
-          <div
+          <a
+            href={`/log/${entry.id}/`}
             data-entry-id={entry.id}
             data-pub-date={utcDateKey(entry.data.pubDate)}
           >
-            <a href={`/log/${entry.id}/`}>
-              <span class="t">{entry.data.title}</span>
-              <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
-            </a>
-            <p class="summary">{entry.data.summary}</p>
-            <span class="tg">
-              {entry.data.tags.map((t: string) => (
-                <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
-              ))}
-            </span>
-          </div>
+            <span class="t">{entry.data.title}</span>
+            <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          </a>
         ))
       }
     </div>

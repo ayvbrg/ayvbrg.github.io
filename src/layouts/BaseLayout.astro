@@ -66,11 +66,11 @@ const onTags = path.startsWith("/tags/");
           btn.setAttribute("aria-pressed", String(isLight));
           btn.setAttribute(
             "aria-label",
-            isLight ? "Use dark theme" : "Use light theme",
+            isLight ? "Use dark mode" : "Use light mode",
           );
           btn.setAttribute(
             "title",
-            isLight ? "Use dark theme" : "Use light theme",
+            isLight ? "Use dark mode" : "Use light mode",
           );
           const glyph = btn.querySelector("[data-theme-glyph]");
           if (glyph) glyph.textContent = isLight ? "☾︎" : "☼︎";
@@ -95,6 +95,32 @@ const onTags = path.startsWith("/tags/");
 
         bindButton();
         if (!btn) window.addEventListener("DOMContentLoaded", bindButton);
+
+        const bootReveal = () => {
+          const nodes = document.querySelectorAll(".reveal");
+          const show = (el) => el.classList.add("in");
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            nodes.forEach(show);
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  show(entry.target);
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.08 },
+          );
+          nodes.forEach((el) => io.observe(el));
+        };
+        if (document.readyState === "loading") {
+          window.addEventListener("DOMContentLoaded", bootReveal);
+        } else {
+          bootReveal();
+        }
       })();
     </script>
   </head>
@@ -112,20 +138,21 @@ const onTags = path.startsWith("/tags/");
     <div class="shell">
       <aside class="rail">
         <div class="mark">
-          <a href="/" aria-label="ayvbrg.log">
+          <a href="/" class="home">
             <svg viewBox="0 0 28 28" aria-hidden="true">
               <path d="M10 12 C8.5 8 8 6 7 3.5 C9 5 10.5 7 11.5 10"></path>
               <path d="M18 12 C19.5 8 20 6 21 3.5 C19 5 17.5 7 16.5 10"></path>
               <path d="M14 10.5 C9.5 10.5 8 14 8.5 18 C9 22 11.5 24.5 14 25 C16.5 24.5 19 22 19.5 18 C20 14 18.5 10.5 14 10.5 Z"></path>
               <line x1="14" y1="11" x2="14" y2="20"></line>
             </svg>
+            <span class="wm"><b>ayvbrg</b>.log</span>
           </a>
-          <a href="/" class="wm"><b>ayvbrg</b>.log</a>
           <button
             class="mode-toggle"
             id="theme-toggle"
             type="button"
-            aria-label="Theme"
+            aria-label="Use light mode"
+            title="Use light mode"
             aria-pressed="false"
           >
             <span data-theme-glyph aria-hidden="true">☼︎</span>
@@ -134,7 +161,7 @@ const onTags = path.startsWith("/tags/");
         <p class="who">Ayushman Buragohain keeps a log of what gets built and what breaks.</p>
         <nav class="rn" aria-label="Primary">
           <a href="/log/" class={onLog && !onTags ? "on" : undefined}>the log</a>
-          <a href="/tags/devlog/" class={onTags ? "on" : undefined}>tags</a>
+          <a href="/tags/" class={onTags ? "on" : undefined}>tags</a>
           <a href="/faq/" class={onFaq ? "on" : undefined}>faq</a>
           <a href="https://github.com/ayvbrg">github</a>
           <a href="/rss.xml">rss</a>
@@ -143,7 +170,9 @@ const onTags = path.startsWith("/tags/");
       </aside>
 
       <main class="main">
-        <slot />
+        <div class="reveal in">
+          <slot />
+        </div>
         <div class="colophon">
           <svg viewBox="0 0 130 16" aria-hidden="true">
             <path d="M2 8 H46"></path>
@@ -156,5 +185,13 @@ const onTags = path.startsWith("/tags/");
         </div>
       </main>
     </div>
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
   </body>
 </html>

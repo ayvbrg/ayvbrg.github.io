@@ -23,25 +23,21 @@ const updatedDate = entry.data.updated
 
 <BaseLayout title={entry.data.title} description={entry.data.summary}>
   <article class="entry">
-    <div class="entry-back">
-      <a class="back" href="/log/">← Back to Log</a>
-    </div>
+    <a class="back" href="/log/">← Back to Log</a>
     <h1>{entry.data.title}</h1>
-    <p class="pub-date" data-pub-date={pubDate}>{formatUtcDate(entry.data.pubDate)}</p>
+    <p class="meta" data-pub-date={pubDate}>{formatUtcDate(entry.data.pubDate)}</p>
 
     {updatedDate ? (
-      <p class="updated-date" data-updated-date={updatedDate}>
+      <p class="meta" data-updated-date={updatedDate}>
         Updated: {formatUtcDate(entry.data.updated!)}
       </p>
     ) : null}
 
-    <ul class="tags" data-tags>
+    <div class="tags" data-tags>
       {entry.data.tags.map((tag: string) => (
-        <li>
-          <a href={`/tags/${tag}/`} class={chipClass(tag)}>{tag}</a>
-        </li>
+        <a href={`/tags/${tag}/`} class={chipClass(tag)}>{tag}</a>
       ))}
-    </ul>
+    </div>
 
     <div class="entry-body">
       <Content />
@@ -68,7 +64,7 @@ const updatedDate = entry.data.updated
       });
     </script>
 
-    <footer class="entry-close">
+    <footer class="foot">
       <a href="mailto:aburagohain160@gmail.com">aburagohain160@gmail.com</a>
       <a href="/rss.xml">RSS</a>
       <a href="/log/">← Back to Log</a>

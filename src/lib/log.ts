@@ -56,3 +56,21 @@ export function chipClass(tag: string): string {
   return "chip rnd";
 }
 
+const TAG_ORDER = ["devlog", "experiment", "random"];
+
+export function tagGroups(entries: Awaited<ReturnType<typeof publicEntries>>) {
+  const tags = [...new Set(entries.flatMap((e) => e.data.tags))];
+  tags.sort((a, b) => {
+    const ia = TAG_ORDER.indexOf(a);
+    const ib = TAG_ORDER.indexOf(b);
+    if (ia === -1 && ib === -1) return a.localeCompare(b);
+    if (ia === -1) return 1;
+    if (ib === -1) return -1;
+    return ia - ib;
+  });
+  return tags.map((tag) => ({
+    tag,
+    entries: entries.filter((e) => e.data.tags.includes(tag)),
+  }));
+}
+
