@@ -55,7 +55,11 @@ export const entryLinks = (doc) =>
     .map((a) => a.getAttribute('href'))
     .filter((href) => href.startsWith('/log/'));
 
-/** Run a production build with the given npm, output directory, and env overrides. */
+/**
+ * Run a production build with the given npm, output directory, and env overrides.
+ * Builds share the project's `.astro` content store, so two running at once
+ * clobber each other's collection: keep `--test-concurrency=1` on `npm test`.
+ */
 export const build = (npm, outDir, env) =>
   spawnSync(npm, ['run', 'build', '--', '--outDir', outDir], {
     encoding: 'utf8',

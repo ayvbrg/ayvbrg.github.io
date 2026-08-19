@@ -197,14 +197,18 @@ test('the real content build lists at least one Entry in the Log', () => {
 // Observes the hrefs the templates write and the directory build format: every
 // internal link must be in canonical trailing-slash form and land on a page that
 // was actually emitted. A dead or slash-less link on any page fails here.
-// The feed is a file route, not a page, and ticket #17 emits it; it is exempt.
+// The feed is a file route, not a page, so it resolves to the file itself.
 test('every internal link resolves to an emitted page with a trailing slash', () => {
   for (const out of [distReal, distTest]) {
     for (const page of pages(out)) {
       const hrefs = [...document(out, page).querySelectorAll('a')]
         .map((a) => a.getAttribute('href'))
-        .filter((href) => href.startsWith('/') && href !== '/rss.xml');
+        .filter((href) => href.startsWith('/'));
       for (const href of hrefs) {
+        if (href.endsWith('.xml')) {
+          assert.ok(existsSync(new URL(`.${href}`, out)), `${page}: ${href} has no emitted file`);
+          continue;
+        }
         assert.match(href, /\/$/, `${page}: ${href} must end in a trailing slash`);
         assert.ok(existsSync(new URL(`.${href}index.html`, out)), `${page}: ${href} has no emitted page`);
       }
