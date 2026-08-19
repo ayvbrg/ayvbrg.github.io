@@ -1,22 +1,47 @@
 ---
-// Bare Log index. Ticket #14 shapes the real Entry row.
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { publicEntries } from '../../lib/log';
 
-const entries = (await getCollection('log', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
+const entries = await publicEntries();
+const day = (date: Date) => date.toISOString().slice(0, 10);
 ---
 
 <Base title="Log">
   <h1>Log</h1>
-  <ul>
+  <ul class="entries">
     {
       entries.map((entry) => (
         <li>
-          <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
+          <h2>
+            <a href={`/log/${entry.id}/`}>{entry.data.title}</a>
+          </h2>
+          <time datetime={day(entry.data.date)}>{day(entry.data.date)}</time>
+          <p>{entry.data.summary}</p>
+          <ul class="tags" aria-label="Tags">
+            {entry.data.tags.map((tag) => (
+              <li>
+                <a href={`/tags/${tag}/`}>{tag}</a>
+              </li>
+            ))}
+          </ul>
         </li>
       ))
     }
   </ul>
 </Base>
+
+<style>
+  .entries,
+  .tags {
+    list-style: none;
+    padding: 0;
+  }
+  .entries > li + li {
+    margin-top: 2rem;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+</style>
