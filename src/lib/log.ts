@@ -1,0 +1,29 @@
+import { getCollection } from "astro:content";
+
+function utcCalendarDateKey(date: Date): string {
+  // Use UTC calendar dates so eligibility is timezone-independent.
+  // e.g. 2026-08-19 in any TZ means "the date portion of date in UTC".
+  return date.toISOString().slice(0, 10);
+}
+
+export async function publicEntries() {
+  const entries = await getCollection("log");
+
+  const todayUtcKey = utcCalendarDateKey(new Date());
+
+  const publicOnes = entries
+    .filter((entry) => entry.data.draft !== true)
+    .filter((entry) => utcCalendarDateKey(entry.data.pubDate) <= todayUtcKey);
+
+  // Newest first by pubDate. For equal pubDate, sort by slug for determinism.
+  publicOnes.sort((a, b) => {
+    const aKey = utcCalendarDateKey(a.data.pubDate);
+    const bKey = utcCalendarDateKey(b.data.pubDate);
+
+    if (aKey !== bKey) return bKey.localeCompare(aKey); // descending
+    return a.id.localeCompare(b.id); // ascending slug
+  });
+
+  return publicOnes;
+}
+

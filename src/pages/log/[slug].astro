@@ -1,9 +1,10 @@
 ---
-import { getCollection, render } from "astro:content";
+import { render } from "astro:content";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { publicEntries } from "../../lib/log";
 
 export async function getStaticPaths() {
-  const entries = await getCollection("log");
+  const entries = await publicEntries();
   return entries.map((entry) => ({
     params: { slug: entry.id },
     props: { entry },
@@ -12,14 +13,49 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content } = await render(entry);
+
+const pubDate = entry.data.pubDate.toISOString().slice(0, 10);
+const updatedDate = entry.data.updated
+  ? entry.data.updated.toISOString().slice(0, 10)
+  : null;
 ---
 
 <BaseLayout title={entry.data.title}>
-  <p><a href="/log/">Back to Log</a></p>
+  <div class="entry-back">
+    <a href="/log/">Back to Log</a>
+  </div>
   <h1>{entry.data.title}</h1>
-  <p>{entry.data.pubDate.toISOString().slice(0, 10)}</p>
-  <ul>
-    {entry.data.tags.map((tag: string) => <li>{tag}</li>)}
+  <p class="pub-date" data-pub-date={pubDate}>{pubDate}</p>
+
+  {updatedDate ? (
+    <p class="updated-date" data-updated-date={updatedDate}>
+      Updated: {updatedDate}
+    </p>
+  ) : null}
+
+  <ul class="tags" data-tags>
+    {entry.data.tags.map((tag: string) => (
+      <li>
+        <a href={`/tags/${tag}/`}>{tag}</a>
+      </li>
+    ))}
   </ul>
-  <Content />
+
+  <div class="entry-body">
+    <Content />
+  </div>
+
+  <footer class="entry-close">
+    <p>
+      <a href="mailto:aburagohain160@gmail.com"
+        >aburagohain160@gmail.com</a
+      >
+    </p>
+    <p>
+      <a href="/rss.xml">RSS</a>
+    </p>
+    <p>
+      <a href="/log/">Back to Log</a>
+    </p>
+  </footer>
 </BaseLayout>
