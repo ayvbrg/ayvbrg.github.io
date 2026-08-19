@@ -121,9 +121,12 @@ test("Log routes: index order, entry shape, exclusions (UTC)", () => {
   assert.match(entryHtml, /href="\/rss\.xml"/);
   assert.match(entryHtml, /href="\/log\/"/);
 
-  // Summary on indexes must NEVER be repeated under the Entry title.
+  // Summary on indexes must NEVER be repeated under the Entry title (in the body).
+  // It MAY appear in <head> metadata (og:description).
+  const bodyStart = entryHtml.indexOf("entry-body");
+  const bodySlice = bodyStart > -1 ? entryHtml.slice(bodyStart) : "";
   assert.equal(
-    entryHtml.includes("Fixture summary for an Entry with a material update."),
+    bodySlice.includes("Fixture summary for an Entry with a material update."),
     false,
   );
 

@@ -1,5 +1,6 @@
 import { defineConfig } from "astro/config";
 import mdx from "@astrojs/mdx";
+import sitemap from "@astrojs/sitemap";
 
 export default defineConfig({
   output: "static",
@@ -8,5 +9,5 @@ export default defineConfig({
   build: {
     inlineStylesheets: "never",
   },
-  integrations: [mdx()],
+  integrations: [mdx(), sitemap()],
 });
