@@ -1,0 +1,25 @@
+{
+  "name": "ayvbrg-log",
+  "version": "0.0.0",
+  "private": true,
+  "description": "dev logs, side quests, experiments, and occasional thoughts.",
+  "engines": {
+    "node": "24.x"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "check": "astro check",
+    "build": "node ./scripts/build.mjs",
+    "preview": "astro preview",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^7.0.6",
+    "astro": "^7.2.3"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@types/node": "^24.3.0",
+    "typescript": "^5.9.2"
+  }
+}
