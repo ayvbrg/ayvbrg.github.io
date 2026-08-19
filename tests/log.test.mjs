@@ -3,52 +3,9 @@ import assert from 'node:assert/strict';
 import { existsSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { build, distReal, distTest, document, pages, read } from './lib.mjs';
-
-/** The public fixture Entries, in the order the Log must list them. */
-const expected = [
-  {
-    slug: 'tie-alpha',
-    title: 'Tie Alpha Fixture Entry',
-    date: '2026-06-07',
-    summary: 'Shares a publication date with Tie Beta; sorts first by slug.',
-    tags: ['random'],
-  },
-  {
-    slug: 'tie-beta',
-    title: 'Tie Beta Fixture Entry',
-    date: '2026-06-07',
-    summary: 'Shares a publication date with Tie Alpha; sorts second by slug.',
-    tags: ['random'],
-  },
-  {
-    slug: 'second-entry',
-    title: 'Second Fixture Entry',
-    date: '2026-03-04',
-    summary: 'The newer fixture Entry.',
-    tags: ['experiment'],
-  },
-  {
-    slug: 'mdx-entry',
-    title: 'MDX Fixture Entry',
-    date: '2026-02-03',
-    summary: 'An MDX Entry, proving MDX renders through the same build.',
-    tags: ['experiment'],
-  },
-  {
-    slug: 'first-entry',
-    title: 'First Fixture Entry',
-    date: '2026-01-02',
-    summary: 'The older fixture Entry.',
-    tags: ['devlog', 'random'],
-  },
-];
+import { build, distReal, distTest, document, entryLinks, expected, pages, read } from './lib.mjs';
 
 const logIndex = () => document(distTest, 'log/index.html');
-const entryLinks = (doc) =>
-  [...doc.querySelectorAll('main a')]
-    .map((a) => a.getAttribute('href'))
-    .filter((href) => href.startsWith('/log/'));
 
 test('every public fixture Entry is emitted at /log/<slug>/', () => {
   const emitted = pages(distTest);
