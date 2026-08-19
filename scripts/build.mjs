@@ -13,11 +13,22 @@ if (!process.env.SITE_URL) {
   process.exit(1);
 }
 
-const result = spawnSync("npx", ["astro", "build"], {
+const astro = spawnSync("npx", ["astro", "build"], {
   stdio: "inherit",
   env: process.env,
 });
 
-if (result.status !== 0) {
-  process.exit(result.status ?? 1);
+if (astro.status !== 0) {
+  process.exit(astro.status ?? 1);
+}
+
+// Run Pagefind to index the built site for /log search
+const pagefind = spawnSync(
+  "npx",
+  ["pagefind", "--site", "dist", "--glob", "log/**/*.html"],
+  { stdio: "inherit", env: process.env },
+);
+
+if (pagefind.status !== 0) {
+  process.exit(pagefind.status ?? 1);
 }
