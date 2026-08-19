@@ -1,0 +1,42 @@
+---
+import { publicEntries, formatUtcDate, utcDateKey, chipClass, tagGroups } from "../../lib/log";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const groups = tagGroups(await publicEntries());
+---
+
+<BaseLayout title="Tags — ayvbrg.log">
+  <div class="tags-page">
+    <div class="head-h">
+      <h1>Tags</h1>
+      <span class="flourish" aria-hidden="true"><i></i></span>
+    </div>
+    <p class="eyebrow">Three ways in.</p>
+    <div class="tagbar">
+      {
+        groups.map((group) => (
+          <a href={`/tags/${group.tag}/`} class={chipClass(group.tag)}>
+            {group.tag} <span class="n">{group.entries.length}</span>
+          </a>
+        ))
+      }
+    </div>
+    {
+      groups.map((group) => (
+        <div class="tgroup">
+          <h3><span class={chipClass(group.tag)}>{group.tag}</span></h3>
+          {group.entries.map((entry) => (
+            <a
+              href={`/log/${entry.id}/`}
+              data-entry-id={entry.id}
+              data-pub-date={utcDateKey(entry.data.pubDate)}
+            >
+              <span class="t">{entry.data.title}</span>
+              <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+            </a>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</BaseLayout>

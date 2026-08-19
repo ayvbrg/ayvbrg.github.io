@@ -1,0 +1,197 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+const site = Astro.site ? Astro.site.toString() : null;
+const canonicalURL = site ? new URL(Astro.url.pathname, site) : null;
+const desc =
+  description ||
+  "Ayushman Buragohain's log of dev work, experiments, side quests, and occasional thoughts.";
+const path = Astro.url.pathname;
+const onLog = path === "/log/" || path.startsWith("/log/");
+const onFaq = path === "/faq/" || path === "/faq";
+const onTags = path.startsWith("/tags/");
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={desc} />
+    {canonicalURL ? <link rel="canonical" href={canonicalURL.href} /> : null}
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={desc} />
+    {canonicalURL ? <meta property="og:url" content={canonicalURL.href} /> : null}
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={desc} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <script is:inline>
+      (() => {
+        const STORAGE_KEY = "ayvbrg.log.theme";
+        const root = document.documentElement;
+
+        let saved = null;
+        try {
+          saved = localStorage.getItem(STORAGE_KEY);
+        } catch {}
+
+        const prefersDark = window.matchMedia(
+          "(prefers-color-scheme: dark)",
+        ).matches;
+        const theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : prefersDark
+              ? "dark"
+              : "light";
+
+        root.dataset.theme = theme;
+        root.style.colorScheme = theme;
+
+        let btn = document.getElementById("theme-toggle");
+
+        const syncButton = () => {
+          if (!btn) return;
+          const isLight = root.dataset.theme === "light";
+          btn.setAttribute("aria-pressed", String(isLight));
+          btn.setAttribute(
+            "aria-label",
+            isLight ? "Use dark mode" : "Use light mode",
+          );
+          btn.setAttribute(
+            "title",
+            isLight ? "Use dark mode" : "Use light mode",
+          );
+          const glyph = btn.querySelector("[data-theme-glyph]");
+          if (glyph) glyph.textContent = isLight ? "☾︎" : "☼︎";
+        };
+
+        const bindButton = () => {
+          btn = document.getElementById("theme-toggle");
+          if (!btn) return;
+          syncButton();
+          if (btn.dataset.themeBound === "1") return;
+          btn.dataset.themeBound = "1";
+          btn.addEventListener("click", () => {
+            const nextTheme = root.dataset.theme === "dark" ? "light" : "dark";
+            try {
+              localStorage.setItem(STORAGE_KEY, nextTheme);
+            } catch {}
+            root.dataset.theme = nextTheme;
+            root.style.colorScheme = nextTheme;
+            syncButton();
+          });
+        };
+
+        bindButton();
+        if (!btn) window.addEventListener("DOMContentLoaded", bindButton);
+
+        const bootReveal = () => {
+          const nodes = document.querySelectorAll(".reveal");
+          const show = (el) => el.classList.add("in");
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            nodes.forEach(show);
+            return;
+          }
+          const io = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting) {
+                  show(entry.target);
+                  io.unobserve(entry.target);
+                }
+              });
+            },
+            { threshold: 0.08 },
+          );
+          nodes.forEach((el) => io.observe(el));
+        };
+        if (document.readyState === "loading") {
+          window.addEventListener("DOMContentLoaded", bootReveal);
+        } else {
+          bootReveal();
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div class="motes" aria-hidden="true">
+      <span class="mote" style="left: 12%; animation-duration: 19s; animation-delay: -2s"></span>
+      <span class="mote" style="left: 26%; animation-duration: 24s; animation-delay: -9s"></span>
+      <span class="mote" style="left: 41%; animation-duration: 21s; animation-delay: -14s"></span>
+      <span class="mote" style="left: 58%; animation-duration: 27s; animation-delay: -4s"></span>
+      <span class="mote" style="left: 73%; animation-duration: 18s; animation-delay: -11s"></span>
+      <span class="mote" style="left: 87%; animation-duration: 23s; animation-delay: -6s"></span>
+    </div>
+    <div class="theme-el motif-hallownest" aria-hidden="true"></div>
+
+    <div class="shell">
+      <aside class="rail">
+        <div class="mark">
+          <a href="/" class="home">
+            <svg viewBox="0 0 28 28" aria-hidden="true">
+              <path d="M10 12 C8.5 8 8 6 7 3.5 C9 5 10.5 7 11.5 10"></path>
+              <path d="M18 12 C19.5 8 20 6 21 3.5 C19 5 17.5 7 16.5 10"></path>
+              <path d="M14 10.5 C9.5 10.5 8 14 8.5 18 C9 22 11.5 24.5 14 25 C16.5 24.5 19 22 19.5 18 C20 14 18.5 10.5 14 10.5 Z"></path>
+              <line x1="14" y1="11" x2="14" y2="20"></line>
+            </svg>
+            <span class="wm"><b>ayvbrg</b>.log</span>
+          </a>
+          <button
+            class="mode-toggle"
+            id="theme-toggle"
+            type="button"
+            aria-label="Use light mode"
+            title="Use light mode"
+            aria-pressed="false"
+          >
+            <span data-theme-glyph aria-hidden="true">☼︎</span>
+          </button>
+        </div>
+        <p class="who">Ayushman Buragohain keeps a log of what gets built and what breaks.</p>
+        <nav class="rn" aria-label="Primary">
+          <a href="/log/" class={onLog && !onTags ? "on" : undefined}>the log</a>
+          <a href="/tags/" class={onTags ? "on" : undefined}>tags</a>
+          <a href="/faq/" class={onFaq ? "on" : undefined}>faq</a>
+          <a href="https://github.com/ayvbrg">github</a>
+          <a href="/rss.xml">rss</a>
+        </nav>
+        <div class="cur"><b>CURRENTLY</b>AI tooling for comics at Dashtoon</div>
+      </aside>
+
+      <main class="main">
+        <div class="reveal in">
+          <slot />
+        </div>
+        <div class="colophon">
+          <svg viewBox="0 0 130 16" aria-hidden="true">
+            <path d="M2 8 H46"></path>
+            <path d="M118 8 H84"></path>
+            <path d="M46 8 C54 1 60 15 65 8 C70 1 76 15 84 8"></path>
+            <path d="M65 2 V14"></path>
+            <path d="M60 4.5 L65 8 L70 4.5"></path>
+          </svg>
+          <span class="c">© 2026 Ayushman Buragohain · built in the open</span>
+        </div>
+      </main>
+    </div>
+    <noscript>
+      <style>
+        .reveal {
+          opacity: 1;
+          transform: none;
+        }
+      </style>
+    </noscript>
+  </body>
+</html>

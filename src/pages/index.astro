@@ -1,0 +1,58 @@
+---
+import { publicEntries, formatUtcDate, chipClass } from "../lib/log";
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const entries = await publicEntries();
+const recent = entries.slice(0, 3);
+---
+
+<BaseLayout title="ayvbrg.log">
+  <section class="identity">
+    <div class="head-h">
+      <h1>Ayushman Buragohain</h1>
+      <span class="flourish" aria-hidden="true"><i></i></span>
+    </div>
+    <p class="role placeholder"><!-- placeholder: current role --></p>
+    <p class="premise eyebrow"><!-- placeholder: one sentence describing the Log --></p>
+  </section>
+
+  <section class="selected-work landing-section">
+    <h2>Selected work</h2>
+    <div class="th"><span>Date</span><span>Work</span><span class="r">Link</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 1 --></span><span class="tg">—</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 2 --></span><span class="tg">—</span></div>
+    <div class="row"><span class="d">—</span><span class="placeholder"><!-- placeholder: work row 3 --></span><span class="tg">—</span></div>
+  </section>
+
+  <section class="recent-entries landing-section">
+    <h2>Recent Entries</h2>
+    <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+    {
+      recent.map((entry) => (
+        <div class="row">
+          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          <span>
+            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="summary">{entry.data.summary}</span>
+          </span>
+          <span class="tg">
+            {entry.data.tags.map((t: string) => (
+              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
+            ))}
+          </span>
+        </div>
+      ))
+    }
+    <p class="eyebrow"><a href="/log/">See the complete Log</a></p>
+  </section>
+
+  <section class="elsewhere landing-section">
+    <h2>Elsewhere</h2>
+    <nav class="else">
+      <a href="https://github.com/ayvbrg">GitHub</a>
+      <a href="https://www.linkedin.com/in/ayushman-buragohain">LinkedIn</a>
+      <a href="mailto:aburagohain160@gmail.com">Email</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </section>
+</BaseLayout>

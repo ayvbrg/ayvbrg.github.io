@@ -1,0 +1,4 @@
+/* Content-surface overflow kept here so the build-output suite can see it. */
+.entry-body pre {
+  overflow-x: auto;
+}

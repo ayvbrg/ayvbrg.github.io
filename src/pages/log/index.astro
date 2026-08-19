@@ -1,0 +1,102 @@
+---
+import { publicEntries, formatUtcDate, utcDateKey, chipClass } from "../../lib/log";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const entries = await publicEntries();
+---
+
+<BaseLayout title="Log — ayvbrg.log">
+  <div class="head-h">
+    <h1>The log</h1>
+    <span class="flourish" aria-hidden="true"><i></i></span>
+  </div>
+  <p class="eyebrow">Everything, newest first.</p>
+
+  <div class="search" id="search">
+    <label for="search-input">Search</label>
+    <input
+      id="search-input"
+      type="search"
+      placeholder="Search entries…"
+      autocomplete="off"
+    />
+    <div id="search-results" class="search-results" aria-live="polite"></div>
+  </div>
+
+  <div class="th"><span>Date</span><span>Entry</span><span class="r">Tag</span></div>
+  <div id="entry-list">
+    {
+      entries.map((entry) => (
+        <div
+          class="row"
+          data-entry-id={entry.id}
+          data-pub-date={utcDateKey(entry.data.pubDate)}
+        >
+          <span class="d">{formatUtcDate(entry.data.pubDate)}</span>
+          <span>
+            <a href={`/log/${entry.id}/`}><span class="t">{entry.data.title}</span></a>
+            <span class="summary">{entry.data.summary}</span>
+          </span>
+          <span class="tg">
+            {entry.data.tags.map((t: string) => (
+              <a href={`/tags/${t}/`} class={chipClass(t)}>{t}</a>
+            ))}
+          </span>
+        </div>
+      ))
+    }
+  </div>
+
+  <noscript>
+    <p>
+      Search requires JavaScript. Browse the full list above or use{" "}
+      <a href="/tags/devlog/">devlog</a>,{" "}
+      <a href="/tags/experiment/">experiment</a>, or{" "}
+      <a href="/tags/random/">random</a> Tag links.
+    </p>
+  </noscript>
+
+  <script is:inline>
+    async function initSearch() {
+      const input = document.getElementById("search-input");
+      const resultsDiv = document.getElementById("search-results");
+      const entryList = document.getElementById("entry-list");
+      if (!input) return;
+
+      try {
+        const pagefind = await import("/pagefind/pagefind.js");
+        await pagefind.init();
+      } catch {
+        return;
+      }
+
+      input.addEventListener("input", async () => {
+        const query = input.value.trim();
+        if (!query) {
+          resultsDiv.innerHTML = "";
+          entryList.style.display = "";
+          return;
+        }
+        entryList.style.display = "none";
+        const search = await pagefind.search(query);
+        if (search.results.length === 0) {
+          resultsDiv.innerHTML = `<p>No results for "${query}". Try <a href="/tags/devlog/">devlog</a>, <a href="/tags/experiment/">experiment</a>, or <a href="/tags/random/">random</a>.</p>`;
+          return;
+        }
+        const items = await Promise.all(
+          search.results.slice(0, 20).map((r) => r.data()),
+        );
+        resultsDiv.innerHTML =
+          "<div>" +
+          items
+            .map(
+              (item) =>
+                `<a class="row" href="${item.url}"><span class="t">${item.meta?.title ?? item.url}</span></a>`,
+            )
+            .join("") +
+          "</div>";
+      });
+    }
+    initSearch();
+  </script>
+</BaseLayout>
